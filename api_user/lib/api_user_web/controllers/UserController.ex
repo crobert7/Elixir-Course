@@ -2,9 +2,13 @@ defmodule ApiUserWeb.UserController do
     use ApiUserWeb, :controller
 
     def index(conn, _params) do #el router siempre recibira como primer parametro la conexion y después los demás parametros
+      users = ApiUser.User.search_all()
+
       conn
-      |>put_status(401)
-      |>text("UnAuth")
+      #|>put_status(401)
+      #|>text("UnAuth")
+      |>put_status(200)
+      |>json(users)
     end
 
     #def show(conn, params) do #el router siempre recibira como primer parametro la conexion y después los demás parametros
@@ -25,8 +29,9 @@ defmodule ApiUserWeb.UserController do
       end
     end
 
-    def create(conn, _params) do #el router siempre recibira como primer parametro la conexion y después los demás parametros
-      changeset = Api.User.create_changeset(%ApiUser{}, params) #Mandamos a llamr la función
+    def create(conn, params) do #el router siempre recibira como primer parametro la conexion y después los demás parametros
+      changeset = ApiUser.User.create_changeset(%ApiUser.User{}, params) #Mandamos a llamar la función
+      IO.inspect(changeset)
 
       case changeset.valid? do
         true ->
@@ -35,6 +40,7 @@ defmodule ApiUserWeb.UserController do
           conn
           |>put_status(200)
           |>text("Element Insert!")
+          |> json(%{user: %{name: user.name, user_id: user.id}})
 
           false ->
           conn
@@ -45,6 +51,6 @@ defmodule ApiUserWeb.UserController do
 
       conn
       |>put_status(200)
-      |>text("create")
+      |>text("Create")
     end
 end

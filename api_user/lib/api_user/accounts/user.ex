@@ -12,7 +12,7 @@ defmodule ApiUser.User do
   end
 
   def create_changeset(user = %ApiUser.User{}, params) do
-    user 
+    user
     |>cast(params, [:name, :age, :company])
     |>validate_required([:name, :age])
   end
@@ -25,4 +25,13 @@ defmodule ApiUser.User do
 
     ApiUser.Repo.one(query)
   end
+
+  def search_all do
+    query = (from u in ApiUser.User,
+      select: [u.name, u.age]
+    )
+    ApiUser.Repo.all(query)
+
+  end
+
 end
